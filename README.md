@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/Lynxcode-id/picture/main/1792592910326.jpeg" width="160" alt="Elyra Baileys logo"/>
 
-# @elyra-labs/baileys
+# @labs-elyraa/baileys
 
 ESM-only WhatsApp Web (multi-device) library for Node.js — interactive messages, native flow, AIRich, Bot framework, VoIP, store backends.
 
@@ -15,7 +15,7 @@ ESM-only WhatsApp Web (multi-device) library for Node.js — interactive message
 ## Install
 
 ```bash
-npm i @elyra-labs/baileys
+npm i @labs-elyraa/baileys
 ```
 
 ```js
