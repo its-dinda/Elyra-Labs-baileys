@@ -6,7 +6,7 @@
 
 ESM-only WhatsApp Web (multi-device) library for Node.js — interactive messages, native flow, AIRich, Bot framework, VoIP, store backends.
 
-[![npm](https://img.shields.io/npm/v/@elyra-labs/baileys?style=for-the-badge)](https://www.npmjs.com/package/@elyra-labs/baileys)
+[![npm](https://img.shields.io/npm/v/@labs-elyraa/baileys?style=for-the-badge)](https://www.npmjs.com/package/@labs-elyraa/baileys)
 ![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen?style=for-the-badge)
 ![license](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
 
