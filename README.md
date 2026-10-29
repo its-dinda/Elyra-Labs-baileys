@@ -1,2 +1,0 @@
-# Elyra-Labs-baileys
-bail
