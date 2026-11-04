@@ -1,6 +1,6 @@
 # NOTICE
 
-`@elyra-labs/baileys` is MIT-licensed (see the root `LICENSE`/`license` field in
+`@labs-elyraa/baileys` is MIT-licensed (see the root `LICENSE`/`license` field in
 `package.json`). It's a fork built on top of, and incorporating ported code
 from, several other MIT-licensed WhatsApp libraries. This file lists each
 third-party component, its original author/source, and where it lives in
@@ -151,3 +151,10 @@ Small, individually attributed MIT ports; each ported file carries a `Vanz@Port`
 - **betton (own bot-side builder module, CommonJS)** — ported into `lib/Builders/Button.js` / `Carousel.js`: `setVideoGif`, `setLocationHeader`, `addMPM`/`addPayment`/`addAgentTransfer`/`addReviewOrder`, the split-button family (`addSplit*`), `Button.sendAudio`, `Carousel.makeCard`/`clearCards`/`cardCount`, plus `lib/Utils/android-stanza-id.js` (`generateAndroidStanzaId` / `patchAndroidStanzaId`). The betton V1 and in-Button card modes were not ported (`ButtonV2` and `Carousel` already cover them).
 - **MessageBuilderv2.js (Nixel's Go port of the AIRich builder; personal/commercial use, no redistribution as a standalone product)** — used as a *structural reference only*; no Go code is copied. Ideas taken: `setForwarded` / `setIncludesUnifiedResponse` / `setIncludesSubmessages`, `addTextRaw`, `addProgress`, quota-upsell variants (written without the Go reference's hardcoded third-party default link), thin wrappers for the real `GenAI*` primitives it pushes (search ad, nested unified, 3P account linking, search planner, orchestrator search engine, professional consent, embedded contextual screen), experimental `addLayout` / `addMultipleResponse` / `addFlexibleGrid` / `addVStack`, and `A2UI.setVersion` / `setCatalogId` / `imageFit` / `imageHeader`. The Go helpers that only emit placeholder markdown text (`addSportsWidget`, `addClippyFollowUp`, `addClippyWidget`, `addP13N`, `addLocationPermission`, `addTimestampPlaceholder`, `addDeeplinkItem`) are ported as the same plain text cards. Go-language plumbing has JS equivalents: `Opts`/`OptsAt` -> `opts()`/`optsAt()`, `MarshalJSON` -> `toJSON()` (AIRich, A2UI, AIRichError), `Error`/`Code`/`Unwrap` -> `message`/`code`/`unwrap()`, `Pay` -> `Button#addPay()` / `Pay()` over the fork's existing `payment-utils.js` (written without the reference's hardcoded payout accounts).
 
+
+### Upstream sync pass — @itsliaaa/baileys 0.4.3+ (v1.1.0)
+Synced from **@itsliaaa/baileys** (Lia Wynn, MIT) into this fork's existing code; each ported file/section keeps its own attribution.
+- `lib/Utils/use-sqlite-auth-state.js` — multi-driver loader (`bun:sqlite` / `node:sqlite` / `better-sqlite3`), `WITHOUT ROWID` schema + pragmas, prepared statements, `BEGIN IMMEDIATE` write transaction, skip-unchanged `saveCreds`. Elyra additions on top: options-object call style, `keys.list` / `keys.listIds` (fixed to query `signal_keys`), passive WAL checkpoint timer.
+- `WAProto/index.js` / `index.d.ts` — message, field, and enum additions taken from itsliaaa's refreshed schema and re-emitted in this package's existing generated style (additive only; `Message.ChatSolidColorWallpaper` #1/#2 intentionally not applied, see `docs/FEATURES.md`).
+- `lib/Defaults/version.js`, `lib/Defaults/index.js` (media path / HKDF mappings, additive), `lib/Utils/messages-media.js` (`server_transcode` for newsletter video-like uploads).
+- Reviewed but **not** ported: debounced phash-mismatch resend (this fork already has its own `phashRetryEnabled` flow), `form_message` attrs fix (this fork routes `form_message` through `native_flow_name`), `HttpError.isBoom` (this fork uses `@hapi/boom`).

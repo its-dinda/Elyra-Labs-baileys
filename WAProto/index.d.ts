@@ -573,6 +573,7 @@ export declare namespace proto {
                 DEFAULT = 1,
                 INCOGNITO = 2,
                 SIDE_CHAT = 3,
+                PRIVATE_SEARCH_CHAT = 4,
             }
         }
         export interface IAIThreadServerInfo { [key: string]: any }
@@ -874,6 +875,21 @@ export declare namespace proto {
             AI_RICH_RESPONSE_ARTIFACTS_ENABLED = 67,
             AI_RICH_RESPONSE_EMAIL_CALENDAR_ENABLED = 68,
             AI_RICH_RESPONSE_REMINDERS_ENABLED = 69,
+            AI_STOP_GENERATION_ENABLED = 70,
+            AI_RICH_RESPONSE_3P_LINKING_CARD_ENABLED = 71,
+            HATCH_NOTIFICATION_METADATA_EVENT_ENABLED = 72,
+            AI_SUGGESTED_REPLIES_ENABLED = 73,
+            RICH_RESPONSE_IN_APP_SURVEY_BLOKS = 74,
+            RICH_RESPONSE_IMAGE_SOURCE_ATTRIBUTION = 75,
+            HATCH_CONNECTOR_ACTION_CARD_ENABLED = 76,
+            HATCH_SECURE_CREDENTIAL_CARD_ENABLED = 77,
+            HATCH_BROWSER_TASK_CARD_ENABLED = 78,
+            HATCH_ARTIFACT_CARD_ENABLED = 79,
+            AI_STUDY_CENTER_ENABLED = 80,
+            AI_MUSE_JARVIS_SCHEMA_ENABLED = 81,
+            AI_STUDY_QUIZ_ENABLED = 82,
+            HATCH_CVM_ENABLED = 83,
+            RICH_RESPONSE_SOCIAL_ENTITY_PREFETCH_SCHEDULER_ENABLED = 84,
         }
     }
     export interface IBotCommandMetadata { [key: string]: any }
@@ -1275,6 +1291,7 @@ export declare namespace proto {
     export namespace BotMessageOrigin {
         export enum BotMessageOriginType {
             BOT_MESSAGE_ORIGIN_TYPE_AI_INITIATED = 0,
+            BOT_MESSAGE_ORIGIN_TYPE_META_AI_THREAD_WELCOME = 1,
         }
     }
     export interface IBotMessageOriginMetadata { [key: string]: any }
@@ -1369,6 +1386,8 @@ export declare namespace proto {
         CHATLIST_SEARCH = 55,
         NEW_CHAT_LIST = 56,
         CONTACTS_TAB = 57,
+        NEW_3P_AGENT_CREATION = 58,
+        SHARE = 59,
     }
     export interface IBotMetricsMetadata { [key: string]: any }
     export class BotMetricsMetadata implements IBotMetricsMetadata {
@@ -2359,6 +2378,8 @@ export declare namespace proto {
                 DESKTOP = 2,
                 WEARABLE = 3,
                 VR = 4,
+                SMART_DISPLAY = 5,
+                SMART_SPEAKER = 6,
             }
             export enum DistributionChannel {
                 APPSTORE = 0,
@@ -2406,6 +2427,9 @@ export declare namespace proto {
                 BLUE_VR = 36,
                 AR_WRIST = 37,
                 WAIL = 38,
+                WORK_ANDROID = 39,
+                WORK_IOS = 40,
+                AUTOMOTIVE = 41,
             }
             export enum ReleaseChannel {
                 RELEASE = 0,
@@ -3315,6 +3339,10 @@ export declare namespace proto {
             MOTION_PHOTO_CHILD = 6,
             HEVC_VIDEO_PARENT = 7,
             HEVC_VIDEO_CHILD = 8,
+            AV1_VIDEO_PARENT = 9,
+            AV1_VIDEO_CHILD = 10,
+            STREAMED_VIDEO_PARENT = 11,
+            STREAMED_VIDEO_CHILD = 12,
         }
         export interface IPartiallySelectedContent { [key: string]: any }
         export class PartiallySelectedContent implements IPartiallySelectedContent {
@@ -3373,6 +3401,8 @@ export declare namespace proto {
             export enum AudienceType {
                 UNKNOWN = 0,
                 CLOSE_FRIENDS = 1,
+                CUSTOM_LIST = 2,
+                ORG = 3,
             }
         }
         export enum StatusSourceType {
@@ -4105,6 +4135,11 @@ export declare namespace proto {
             CLOUD_API = 23,
             SMARTGLASSES = 24,
             WAIL = 25,
+            WASS = 26,
+            BUSINESS_BACK_OFFICE = 27,
+            WAIL_WAI = 28,
+            WAIL_ALEXA = 29,
+            AUTOMOTIVE = 30,
         }
     }
     export interface IDisappearingMode { [key: string]: any }
@@ -4935,6 +4970,7 @@ export declare namespace proto {
             PUSH_NAME = 4,
             NON_BLOCKING_DATA = 5,
             ON_DEMAND = 6,
+            RECENT_CONVERSATIONS_ON_DEMAND = 9,
         }
     }
     export interface IHistorySyncMsg { [key: string]: any }
@@ -6731,6 +6767,7 @@ export declare namespace proto {
             ON_DEMAND = 6,
             NO_HISTORY = 7,
             MESSAGE_ACCESS_STATUS = 8,
+            RECENT_CONVERSATIONS_ON_DEMAND = 9,
         }
         export interface IImageMessage { [key: string]: any }
         export class ImageMessage implements IImageMessage {
@@ -7360,6 +7397,8 @@ export declare namespace proto {
             export enum MusicMessageStyle {
                 UNKNOWN = 0,
                 VINYL = 1,
+                MESSAGE_BUBBLE = 2,
+                LYRICS = 3,
             }
         }
         export interface INewsletterAdminInviteMessage { [key: string]: any }
@@ -7990,6 +8029,7 @@ export declare namespace proto {
             BUSINESS_BROADCAST_INSIGHTS_DELIVERED_TO = 12,
             BUSINESS_BROADCAST_INSIGHTS_REFRESH = 13,
             CONTACT_REFRESH_REQUEST = 14,
+            RECENT_CONVERSATIONS_ON_DEMAND_REQUEST = 15,
         }
         export interface IPinInChatMessage { [key: string]: any }
         export class PinInChatMessage implements IPinInChatMessage {
@@ -8262,6 +8302,9 @@ export declare namespace proto {
                 AI_METADATA_OPERATION = 35,
                 MARK_AS_VERIFIED_ACTION = 36,
                 COEX_STATE_SYNC = 37,
+                ACP2_SETTING = 39,
+                SHARED_DEVICE_CONTACT_HASH_KEY_SHARE = 40,
+                SHARED_DEVICE_CONTACT_HASH_KEY_REQUEST = 41,
             }
         }
         export interface IQuestionResponseMessage { [key: string]: any }
@@ -8794,6 +8837,7 @@ export declare namespace proto {
             EVENT_RESPONSE = 2,
             POLL_UPDATE = 3,
             PIN_IN_CHAT = 4,
+            REQUEST_LOCATION_UPDATE = 5,
         }
     }
     export interface IMessageAddOnContextInfo { [key: string]: any }
@@ -8847,6 +8891,8 @@ export declare namespace proto {
             STATUS_REACTION = 18,
             HEVC_VIDEO_DUAL_UPLOAD = 19,
             POLL_ADD_OPTION = 20,
+            AV1_VIDEO_DUAL_UPLOAD = 21,
+            STREAMED_HD_VIDEO_DUAL_UPLOAD = 22,
         }
     }
     export interface IMessageContextInfo { [key: string]: any }
@@ -9475,6 +9521,14 @@ export declare namespace proto {
         SHARE_OWN_PN = 10001,
         BUSINESS_BROADCAST_ACTION = 10002,
         AI_THREAD_DELETE_ACTION = 10003,
+        SHARED_DEVICE_ALLOWLIST_ACTION = 94,
+        CONTACT_MANAGER_METADATA_ACTION = 95,
+        BUSINESS_FOLDER_ACTIVATION_ACTION = 96,
+        GROUP_HISTORY_TOGGLE_ACTION = 97,
+        BB_PRO_PENDING_CUSTOMER_BASE_ACTION = 98,
+        COMMUNITY_NESTING_STATE_ACTION = 99,
+        SHARED_DEVICE_SECRET_ACTION = 100,
+        HATCH_CVM_SECRET_ACTION = 101,
     }
     export interface INoiseCertificate { [key: string]: any }
     export class NoiseCertificate implements INoiseCertificate {
@@ -11364,6 +11418,9 @@ export declare namespace proto {
                 THIRD_PARTY = 15,
                 LEAD = 16,
                 MENTIONS_AND_REPLIES = 17,
+                REQUESTS = 18,
+                BUSINESS = 19,
+                ONE_ON_ONE = 20,
             }
         }
         export interface ILabelReorderingAction { [key: string]: any }
@@ -11925,6 +11982,7 @@ export declare namespace proto {
                 CHAT_THEME_ID = 32,
                 COLOR_SCHEME_ID = 33,
                 STOCK_WALLPAPER_IMAGE_ID = 34,
+                MEDIA_AUTO_DOWNLOAD_QUALITY = 35,
             }
             export enum SettingPlatform {
                 PLATFORM_UNKNOWN = 0,
@@ -12971,6 +13029,43 @@ export declare namespace proto {
             IDENTITY_TRUST_UNMARKED = 227,
             IDENTITY_TRUST_REVOKED = 228,
             CTWA_CONSUMER_DISCLOSURE = 230,
+            CHANGE_ACP2_SETTING = 240,
+            BIZ_CALLBACK_DISABLED = 244,
+            BIZ_CALLBACK_ENABLED = 247,
+            EPHEMERAL_CHANGED_FOR_COEX = 248,
+            UGC_BOT_PROFILE_UPDATED = 249,
+            ORDER_EPHEMERAL_EXEMPTION = 250,
+            GROUP_DEFAULT_SUB_GROUP_DEMOTE = 251,
+            BIZ_BUSINESS_BROADCAST_ENTRY_POINT = 252,
+            BOT_INLINE_TOS_CHAT = 253,
+            CAMEO_CHAT_CREATED = 254,
+            SENDER_SIDE_CONTACT_INFO = 255,
+            CAMEO_TRANSITIONED = 256,
+            CAMEO_REGISTERED_WITH_NEW_CHAT = 257,
+            PRIVACY_SYSTEM_MESSAGE = 258,
+            BIZ_AI_LEARNING_ENABLED_DISCLOSURE = 259,
+            BIZ_AI_LEARNING_DISABLED_DISCLOSURE = 260,
+            BIZ_AI_REPLIES_MUTED_HISTORICAL_CHAT = 261,
+            INVITE_FROM_IG = 262,
+            GROUP_ADMIN_FIRST_JOIN_VIA_LINK = 263,
+            GROUP_ADMIN_FLOOD_JOIN_VIA_LINK = 264,
+            BIZ_AI_REPLIES_MUTED_IRRELEVANT_HISTORICAL_CHAT = 265,
+            PENDING_INVITE_CREATED = 266,
+            CAMEO_CHAT_EXPIRED = 267,
+            GROUP_PUSHNAME_SHARED = 270,
+            BIZ_POST_SEND_OPT_OUT = 271,
+            BB_PRO_BROADCAST_CHAT_CARD = 272,
+            BOT_PROACTIVE_MESSAGE_ENABLED = 273,
+            BOT_PROACTIVE_MESSAGE_DISABLED = 274,
+            BOT_PROACTIVE_MESSAGE_FIRST_TIME = 275,
+            DYNAMIC_AUDIENCE_LIST_CREATE = 276,
+            DYNAMIC_AUDIENCE_LIST_UPDATE_LINK = 277,
+            CHAT_WITH_BUSINESS_IN_DIRECTORY = 283,
+            META_AI_THREAD_CREATED = 284,
+            META_AI_CONNECTOR_LINKED = 285,
+            SPLIT_PAYMENT_MARKED_AS_PAID = 289,
+            POLL_OPTIONS_REMOVED = 290,
+            POLL_ADDED_OPTION_REMOVED = 291,
         }
     }
     export interface IWebMessageInfoWithMessageBytes { [key: string]: any }
@@ -13056,6 +13151,510 @@ export declare namespace proto {
         static fromObject(object: { [k: string]: any }): WrapTransportSigningSecretKeyResult;
         static toObject(message: WrapTransportSigningSecretKeyResult, options?: any): { [k: string]: any };
         toJSON(): { [k: string]: any };
+    }
+    export interface IBotInterjectionMetadata { [key: string]: any }
+    export class BotInterjectionMetadata implements IBotInterjectionMetadata {
+        constructor(properties?: IBotInterjectionMetadata);
+        [key: string]: any;
+        targetPromptMessageId?: string | null;
+        foldedPromptMessageIds: string[];
+        static create(properties?: IBotInterjectionMetadata): BotInterjectionMetadata;
+        static encode(message: IBotInterjectionMetadata, writer?: any): any;
+        static encodeDelimited(message: IBotInterjectionMetadata, writer?: any): any;
+        static decode(reader: any, length?: number): BotInterjectionMetadata;
+        static decodeDelimited(reader: any): BotInterjectionMetadata;
+        static verify(message: { [k: string]: any }): string | null;
+        static fromObject(object: { [k: string]: any }): BotInterjectionMetadata;
+        static toObject(message: BotInterjectionMetadata, options?: any): { [k: string]: any };
+        toJSON(): { [k: string]: any };
+    }
+    export interface IEventInviteAdditionalMetadata { [key: string]: any }
+    export class EventInviteAdditionalMetadata implements IEventInviteAdditionalMetadata {
+        constructor(properties?: IEventInviteAdditionalMetadata);
+        [key: string]: any;
+        isUpdated?: boolean | null;
+        static create(properties?: IEventInviteAdditionalMetadata): EventInviteAdditionalMetadata;
+        static encode(message: IEventInviteAdditionalMetadata, writer?: any): any;
+        static encodeDelimited(message: IEventInviteAdditionalMetadata, writer?: any): any;
+        static decode(reader: any, length?: number): EventInviteAdditionalMetadata;
+        static decodeDelimited(reader: any): EventInviteAdditionalMetadata;
+        static verify(message: { [k: string]: any }): string | null;
+        static fromObject(object: { [k: string]: any }): EventInviteAdditionalMetadata;
+        static toObject(message: EventInviteAdditionalMetadata, options?: any): { [k: string]: any };
+        toJSON(): { [k: string]: any };
+    }
+    export interface IOmittedConversationMetadata { [key: string]: any }
+    export class OmittedConversationMetadata implements IOmittedConversationMetadata {
+        constructor(properties?: IOmittedConversationMetadata);
+        [key: string]: any;
+        snapshotId?: string | null;
+        snapshotTimestampMs?: number | null;
+        batchIndex?: number | null;
+        batchCount?: number | null;
+        complete?: boolean | null;
+        conversations: proto.IConversation[];
+        static create(properties?: IOmittedConversationMetadata): OmittedConversationMetadata;
+        static encode(message: IOmittedConversationMetadata, writer?: any): any;
+        static encodeDelimited(message: IOmittedConversationMetadata, writer?: any): any;
+        static decode(reader: any, length?: number): OmittedConversationMetadata;
+        static decodeDelimited(reader: any): OmittedConversationMetadata;
+        static verify(message: { [k: string]: any }): string | null;
+        static fromObject(object: { [k: string]: any }): OmittedConversationMetadata;
+        static toObject(message: OmittedConversationMetadata, options?: any): { [k: string]: any };
+        toJSON(): { [k: string]: any };
+    }
+    export namespace CallLogRecord {
+        export interface IGuestInfo { [key: string]: any }
+        export class GuestInfo implements IGuestInfo {
+            constructor(properties?: IGuestInfo);
+            [key: string]: any;
+            pushName?: string | null;
+            static create(properties?: IGuestInfo): GuestInfo;
+            static encode(message: IGuestInfo, writer?: any): any;
+            static encodeDelimited(message: IGuestInfo, writer?: any): any;
+            static decode(reader: any, length?: number): GuestInfo;
+            static decodeDelimited(reader: any): GuestInfo;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): GuestInfo;
+            static toObject(message: GuestInfo, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+    }
+    export namespace DeviceCapabilities {
+        export interface IBizAiWebOnboarding { [key: string]: any }
+        export class BizAiWebOnboarding implements IBizAiWebOnboarding {
+            constructor(properties?: IBizAiWebOnboarding);
+            [key: string]: any;
+            version?: number | null;
+            static create(properties?: IBizAiWebOnboarding): BizAiWebOnboarding;
+            static encode(message: IBizAiWebOnboarding, writer?: any): any;
+            static encodeDelimited(message: IBizAiWebOnboarding, writer?: any): any;
+            static decode(reader: any, length?: number): BizAiWebOnboarding;
+            static decodeDelimited(reader: any): BizAiWebOnboarding;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): BizAiWebOnboarding;
+            static toObject(message: BizAiWebOnboarding, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export interface IHostWriteMutationSupport { [key: string]: any }
+        export class HostWriteMutationSupport implements IHostWriteMutationSupport {
+            constructor(properties?: IHostWriteMutationSupport);
+            [key: string]: any;
+            mutationNames: string[];
+            static create(properties?: IHostWriteMutationSupport): HostWriteMutationSupport;
+            static encode(message: IHostWriteMutationSupport, writer?: any): any;
+            static encodeDelimited(message: IHostWriteMutationSupport, writer?: any): any;
+            static decode(reader: any, length?: number): HostWriteMutationSupport;
+            static decodeDelimited(reader: any): HostWriteMutationSupport;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): HostWriteMutationSupport;
+            static toObject(message: HostWriteMutationSupport, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export interface INewsletterChatsMigration { [key: string]: any }
+        export class NewsletterChatsMigration implements INewsletterChatsMigration {
+            constructor(properties?: INewsletterChatsMigration);
+            [key: string]: any;
+            effectiveMigrated?: boolean | null;
+            countdownEndsAt?: number | null;
+            rolledBack?: boolean | null;
+            static create(properties?: INewsletterChatsMigration): NewsletterChatsMigration;
+            static encode(message: INewsletterChatsMigration, writer?: any): any;
+            static encodeDelimited(message: INewsletterChatsMigration, writer?: any): any;
+            static decode(reader: any, length?: number): NewsletterChatsMigration;
+            static decodeDelimited(reader: any): NewsletterChatsMigration;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): NewsletterChatsMigration;
+            static toObject(message: NewsletterChatsMigration, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export interface IReverseHistorySync { [key: string]: any }
+        export class ReverseHistorySync implements IReverseHistorySync {
+            constructor(properties?: IReverseHistorySync);
+            [key: string]: any;
+            enabledProducts: number[];
+            static create(properties?: IReverseHistorySync): ReverseHistorySync;
+            static encode(message: IReverseHistorySync, writer?: any): any;
+            static encodeDelimited(message: IReverseHistorySync, writer?: any): any;
+            static decode(reader: any, length?: number): ReverseHistorySync;
+            static decodeDelimited(reader: any): ReverseHistorySync;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): ReverseHistorySync;
+            static toObject(message: ReverseHistorySync, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export namespace ReverseHistorySync {
+            export enum Product {
+                PRODUCT_UNSPECIFIED = 0,
+                HATCH = 1,
+            }
+        }
+    }
+    export namespace Message {
+        export interface ICoexConnectionDescriptor { [key: string]: any }
+        export class CoexConnectionDescriptor implements ICoexConnectionDescriptor {
+            constructor(properties?: ICoexConnectionDescriptor);
+            [key: string]: any;
+            providerId?: number | null;
+            product?: string | null;
+            static create(properties?: ICoexConnectionDescriptor): CoexConnectionDescriptor;
+            static encode(message: ICoexConnectionDescriptor, writer?: any): any;
+            static encodeDelimited(message: ICoexConnectionDescriptor, writer?: any): any;
+            static decode(reader: any, length?: number): CoexConnectionDescriptor;
+            static decodeDelimited(reader: any): CoexConnectionDescriptor;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): CoexConnectionDescriptor;
+            static toObject(message: CoexConnectionDescriptor, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export interface IRequestLocationMessage { [key: string]: any }
+        export class RequestLocationMessage implements IRequestLocationMessage {
+            constructor(properties?: IRequestLocationMessage);
+            [key: string]: any;
+            contextInfo?: proto.IContextInfo | null;
+            static create(properties?: IRequestLocationMessage): RequestLocationMessage;
+            static encode(message: IRequestLocationMessage, writer?: any): any;
+            static encodeDelimited(message: IRequestLocationMessage, writer?: any): any;
+            static decode(reader: any, length?: number): RequestLocationMessage;
+            static decodeDelimited(reader: any): RequestLocationMessage;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): RequestLocationMessage;
+            static toObject(message: RequestLocationMessage, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export interface IRequestLocationUpdateMessage { [key: string]: any }
+        export class RequestLocationUpdateMessage implements IRequestLocationUpdateMessage {
+            constructor(properties?: IRequestLocationUpdateMessage);
+            [key: string]: any;
+            key?: proto.IMessageKey | null;
+            updateType?: number | null;
+            senderTimestampMs?: number | null;
+            static create(properties?: IRequestLocationUpdateMessage): RequestLocationUpdateMessage;
+            static encode(message: IRequestLocationUpdateMessage, writer?: any): any;
+            static encodeDelimited(message: IRequestLocationUpdateMessage, writer?: any): any;
+            static decode(reader: any, length?: number): RequestLocationUpdateMessage;
+            static decodeDelimited(reader: any): RequestLocationUpdateMessage;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): RequestLocationUpdateMessage;
+            static toObject(message: RequestLocationUpdateMessage, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export namespace RequestLocationUpdateMessage {
+            export enum UpdateType {
+                UNKNOWN = 0,
+                CANCEL = 1,
+            }
+        }
+    }
+    export namespace Message {
+        export namespace MusicMessage {
+            export interface ILyrics { [key: string]: any }
+            export class Lyrics implements ILyrics {
+                constructor(properties?: ILyrics);
+                [key: string]: any;
+                lines: proto.Message.MusicMessage.Lyrics.ILine[];
+                static create(properties?: ILyrics): Lyrics;
+                static encode(message: ILyrics, writer?: any): any;
+                static encodeDelimited(message: ILyrics, writer?: any): any;
+                static decode(reader: any, length?: number): Lyrics;
+                static decodeDelimited(reader: any): Lyrics;
+                static verify(message: { [k: string]: any }): string | null;
+                static fromObject(object: { [k: string]: any }): Lyrics;
+                static toObject(message: Lyrics, options?: any): { [k: string]: any };
+                toJSON(): { [k: string]: any };
+            }
+            export namespace Lyrics {
+                export interface ILine { [key: string]: any }
+                export class Line implements ILine {
+                    constructor(properties?: ILine);
+                    [key: string]: any;
+                    startTimeInMs?: number | null;
+                    endTimeInMs?: number | null;
+                    text?: string | null;
+                    wordOffsets: proto.Message.MusicMessage.Lyrics.Line.IWordOffset[];
+                    static create(properties?: ILine): Line;
+                    static encode(message: ILine, writer?: any): any;
+                    static encodeDelimited(message: ILine, writer?: any): any;
+                    static decode(reader: any, length?: number): Line;
+                    static decodeDelimited(reader: any): Line;
+                    static verify(message: { [k: string]: any }): string | null;
+                    static fromObject(object: { [k: string]: any }): Line;
+                    static toObject(message: Line, options?: any): { [k: string]: any };
+                    toJSON(): { [k: string]: any };
+                }
+                export namespace Line {
+                    export interface IWordOffset { [key: string]: any }
+                    export class WordOffset implements IWordOffset {
+                        constructor(properties?: IWordOffset);
+                        [key: string]: any;
+                        startIndex?: number | null;
+                        endIndex?: number | null;
+                        startOffsetMs?: number | null;
+                        endOffsetMs?: number | null;
+                        static create(properties?: IWordOffset): WordOffset;
+                        static encode(message: IWordOffset, writer?: any): any;
+                        static encodeDelimited(message: IWordOffset, writer?: any): any;
+                        static decode(reader: any, length?: number): WordOffset;
+                        static decodeDelimited(reader: any): WordOffset;
+                        static verify(message: { [k: string]: any }): string | null;
+                        static fromObject(object: { [k: string]: any }): WordOffset;
+                        static toObject(message: WordOffset, options?: any): { [k: string]: any };
+                        toJSON(): { [k: string]: any };
+                    }
+                }
+            }
+        }
+    }
+    export namespace Message {
+        export namespace PeerDataOperationRequestMessage {
+            export interface IRecentConversationsOnDemandRequest { [key: string]: any }
+            export class RecentConversationsOnDemandRequest implements IRecentConversationsOnDemandRequest {
+                constructor(properties?: IRecentConversationsOnDemandRequest);
+                [key: string]: any;
+                conversationCount?: number | null;
+                messagesPerConversation?: number | null;
+                static create(properties?: IRecentConversationsOnDemandRequest): RecentConversationsOnDemandRequest;
+                static encode(message: IRecentConversationsOnDemandRequest, writer?: any): any;
+                static encodeDelimited(message: IRecentConversationsOnDemandRequest, writer?: any): any;
+                static decode(reader: any, length?: number): RecentConversationsOnDemandRequest;
+                static decodeDelimited(reader: any): RecentConversationsOnDemandRequest;
+                static verify(message: { [k: string]: any }): string | null;
+                static fromObject(object: { [k: string]: any }): RecentConversationsOnDemandRequest;
+                static toObject(message: RecentConversationsOnDemandRequest, options?: any): { [k: string]: any };
+                toJSON(): { [k: string]: any };
+            }
+        }
+    }
+    export namespace MsgOpaqueData {
+        export interface IMusicData { [key: string]: any }
+        export class MusicData implements IMusicData {
+            constructor(properties?: IMusicData);
+            [key: string]: any;
+            musicContentMediaId?: string | null;
+            songId?: string | null;
+            author?: string | null;
+            title?: string | null;
+            songUri?: string | null;
+            artworkUri?: string | null;
+            style?: number | null;
+            songStartTimeMs?: number | null;
+            clipDurationMs?: number | null;
+            isExplicit?: boolean | null;
+            countryBlocklist?: Uint8Array | null;
+            artistAttribution?: string | null;
+            artworkDirectPath?: string | null;
+            artworkSha256?: Uint8Array | null;
+            artworkEncSha256?: Uint8Array | null;
+            artworkMediaKey?: Uint8Array | null;
+            consumptionCheckedAtS?: number | null;
+            isAvailableForConsumption?: boolean | null;
+            lyrics: proto.MsgOpaqueData.MusicData.ILyricsLine[];
+            lyricsConfirmedAtS?: number | null;
+            static create(properties?: IMusicData): MusicData;
+            static encode(message: IMusicData, writer?: any): any;
+            static encodeDelimited(message: IMusicData, writer?: any): any;
+            static decode(reader: any, length?: number): MusicData;
+            static decodeDelimited(reader: any): MusicData;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): MusicData;
+            static toObject(message: MusicData, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export namespace MusicData {
+            export interface ILyricsLine { [key: string]: any }
+            export class LyricsLine implements ILyricsLine {
+                constructor(properties?: ILyricsLine);
+                [key: string]: any;
+                startTimeMs?: number | null;
+                endTimeMs?: number | null;
+                text?: string | null;
+                wordOffsets: proto.MsgOpaqueData.MusicData.LyricsLine.IWordOffset[];
+                static create(properties?: ILyricsLine): LyricsLine;
+                static encode(message: ILyricsLine, writer?: any): any;
+                static encodeDelimited(message: ILyricsLine, writer?: any): any;
+                static decode(reader: any, length?: number): LyricsLine;
+                static decodeDelimited(reader: any): LyricsLine;
+                static verify(message: { [k: string]: any }): string | null;
+                static fromObject(object: { [k: string]: any }): LyricsLine;
+                static toObject(message: LyricsLine, options?: any): { [k: string]: any };
+                toJSON(): { [k: string]: any };
+            }
+            export namespace LyricsLine {
+                export interface IWordOffset { [key: string]: any }
+                export class WordOffset implements IWordOffset {
+                    constructor(properties?: IWordOffset);
+                    [key: string]: any;
+                    startIndex?: number | null;
+                    endIndex?: number | null;
+                    startOffsetMs?: number | null;
+                    endOffsetMs?: number | null;
+                    static create(properties?: IWordOffset): WordOffset;
+                    static encode(message: IWordOffset, writer?: any): any;
+                    static encodeDelimited(message: IWordOffset, writer?: any): any;
+                    static decode(reader: any, length?: number): WordOffset;
+                    static decodeDelimited(reader: any): WordOffset;
+                    static verify(message: { [k: string]: any }): string | null;
+                    static fromObject(object: { [k: string]: any }): WordOffset;
+                    static toObject(message: WordOffset, options?: any): { [k: string]: any };
+                    toJSON(): { [k: string]: any };
+                }
+            }
+        }
+    }
+    export namespace SyncActionValue {
+        export interface IBBProPendingCustomerBaseAction { [key: string]: any }
+        export class BBProPendingCustomerBaseAction implements IBBProPendingCustomerBaseAction {
+            constructor(properties?: IBBProPendingCustomerBaseAction);
+            [key: string]: any;
+            pending?: boolean | null;
+            static create(properties?: IBBProPendingCustomerBaseAction): BBProPendingCustomerBaseAction;
+            static encode(message: IBBProPendingCustomerBaseAction, writer?: any): any;
+            static encodeDelimited(message: IBBProPendingCustomerBaseAction, writer?: any): any;
+            static decode(reader: any, length?: number): BBProPendingCustomerBaseAction;
+            static decodeDelimited(reader: any): BBProPendingCustomerBaseAction;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): BBProPendingCustomerBaseAction;
+            static toObject(message: BBProPendingCustomerBaseAction, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export interface ICommunityNestingStateAction { [key: string]: any }
+        export class CommunityNestingStateAction implements ICommunityNestingStateAction {
+            constructor(properties?: ICommunityNestingStateAction);
+            [key: string]: any;
+            nestingState?: number | null;
+            static create(properties?: ICommunityNestingStateAction): CommunityNestingStateAction;
+            static encode(message: ICommunityNestingStateAction, writer?: any): any;
+            static encodeDelimited(message: ICommunityNestingStateAction, writer?: any): any;
+            static decode(reader: any, length?: number): CommunityNestingStateAction;
+            static decodeDelimited(reader: any): CommunityNestingStateAction;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): CommunityNestingStateAction;
+            static toObject(message: CommunityNestingStateAction, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export namespace CommunityNestingStateAction {
+            export enum NestingState {
+                PLATFORM_DEFAULT = 0,
+                NESTED = 1,
+                UNNESTED = 2,
+            }
+        }
+        export interface IGroupHistoryToggleAction { [key: string]: any }
+        export class GroupHistoryToggleAction implements IGroupHistoryToggleAction {
+            constructor(properties?: IGroupHistoryToggleAction);
+            [key: string]: any;
+            groupHistoryToggleMode?: number | null;
+            static create(properties?: IGroupHistoryToggleAction): GroupHistoryToggleAction;
+            static encode(message: IGroupHistoryToggleAction, writer?: any): any;
+            static encodeDelimited(message: IGroupHistoryToggleAction, writer?: any): any;
+            static decode(reader: any, length?: number): GroupHistoryToggleAction;
+            static decodeDelimited(reader: any): GroupHistoryToggleAction;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): GroupHistoryToggleAction;
+            static toObject(message: GroupHistoryToggleAction, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export namespace GroupHistoryToggleAction {
+            export enum GroupHistoryToggleMode {
+                GROUP_HISTORY_TOGGLE_MODE_UNKNOWN = 0,
+                GROUP_HISTORY_TOGGLE_MODE_ON = 1,
+                GROUP_HISTORY_TOGGLE_MODE_OFF = 2,
+            }
+        }
+        export interface IHatchCVMSecretAction { [key: string]: any }
+        export class HatchCVMSecretAction implements IHatchCVMSecretAction {
+            constructor(properties?: IHatchCVMSecretAction);
+            [key: string]: any;
+            secret?: Uint8Array | null;
+            generation?: number | null;
+            static create(properties?: IHatchCVMSecretAction): HatchCVMSecretAction;
+            static encode(message: IHatchCVMSecretAction, writer?: any): any;
+            static encodeDelimited(message: IHatchCVMSecretAction, writer?: any): any;
+            static decode(reader: any, length?: number): HatchCVMSecretAction;
+            static decodeDelimited(reader: any): HatchCVMSecretAction;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): HatchCVMSecretAction;
+            static toObject(message: HatchCVMSecretAction, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export interface ISharedDeviceSecretAction { [key: string]: any }
+        export class SharedDeviceSecretAction implements ISharedDeviceSecretAction {
+            constructor(properties?: ISharedDeviceSecretAction);
+            [key: string]: any;
+            secret?: Uint8Array | null;
+            ttlMs?: number | null;
+            static create(properties?: ISharedDeviceSecretAction): SharedDeviceSecretAction;
+            static encode(message: ISharedDeviceSecretAction, writer?: any): any;
+            static encodeDelimited(message: ISharedDeviceSecretAction, writer?: any): any;
+            static decode(reader: any, length?: number): SharedDeviceSecretAction;
+            static decodeDelimited(reader: any): SharedDeviceSecretAction;
+            static verify(message: { [k: string]: any }): string | null;
+            static fromObject(object: { [k: string]: any }): SharedDeviceSecretAction;
+            static toObject(message: SharedDeviceSecretAction, options?: any): { [k: string]: any };
+            toJSON(): { [k: string]: any };
+        }
+        export enum BusinessBroadcastCampaignBBProStatus {
+            BB_PRO_ACTIVE = 1,
+            BB_PRO_COMPLETED = 2,
+            BB_PRO_IN_DRAFT = 3,
+            BB_PRO_IN_REVIEW = 4,
+            BB_PRO_NOT_SENDING = 5,
+            BB_PRO_OFF = 6,
+            BB_PRO_REJECTED = 7,
+            BB_PRO_SCHEDULED = 8,
+            BB_PRO_SENDING_LIMITED = 9,
+            BB_PRO_PROCESSING = 10,
+        }
+    }
+    export namespace BizAIMetadataSync {
+        export namespace ServerEvent {
+            export enum ProtocolEvent {
+                UNSPECIFIED = 0,
+                AGENT_CHAT_READY = 1,
+            }
+        }
+    }
+    export namespace Message {
+        export namespace EventInviteMessage {
+            export enum EventStatus {
+                UNKNOWN = 0,
+                ACTIVE = 1,
+                CANCELED = 2,
+                SUSPENDED = 3,
+                DELETED = 4,
+                LEFT_EVENT = 5,
+                REMOVED_FROM_INVITE_LIST = 6,
+            }
+        }
+    }
+    export namespace Message {
+        export namespace PeerDataOperationRequestMessage {
+            export namespace HistorySyncOnDemandRequest {
+                export enum Mode {
+                    MODE_UNSPECIFIED = 0,
+                    INITIAL_REVERSE_HISTORY = 1,
+                }
+            }
+        }
+    }
+    export namespace Message {
+        export namespace SharedDeviceContactHashKey {
+            export enum Kind {
+                UNKNOWN = 0,
+                LID = 1,
+                PHONE_NUMBER = 2,
+            }
+        }
+    }
+    export namespace SyncActionValue {
+        export namespace SettingsSyncAction {
+            export enum MediaAutoDownloadQualitySetting {
+                MEDIA_AUTO_DOWNLOAD_QUALITY_UNKNOWN = 0,
+                MEDIA_AUTO_DOWNLOAD_QUALITY_STANDARD = 1,
+                MEDIA_AUTO_DOWNLOAD_QUALITY_HD = 2,
+                MEDIA_AUTO_DOWNLOAD_QUALITY_AUTO = 3,
+            }
+        }
     }
 }
 declare const $root: any;

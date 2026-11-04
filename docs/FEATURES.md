@@ -1,4 +1,4 @@
-> Dokumentasi fitur (diwarisi dari @vanzxy/baileys, nama paket diganti ke @elyra-labs/baileys). Contoh `import` memakai `@elyra-labs/baileys`.
+> Dokumentasi fitur (diwarisi dari @vanzxy/baileys, nama paket diganti ke @labs-elyraa/baileys). Contoh `import` memakai `@labs-elyraa/baileys`.
 
 <div align="center" id="top">
 
@@ -9,8 +9,8 @@
 </p>
 
 <p>
-<a href="https://www.npmjs.com/package/@elyra-labs/baileys" target="_blank"><img src="https://img.shields.io/npm/v/@elyra-labs/baileys?color=2ecc71&label=npm&style=for-the-badge" alt="npm version"/></a>
-<a href="https://www.npmjs.com/package/@elyra-labs/baileys" target="_blank"><img src="https://img.shields.io/npm/dt/@elyra-labs/baileys?color=3498db&style=for-the-badge" alt="npm downloads"/></a>
+<a href="https://www.npmjs.com/package/@labs-elyraa/baileys" target="_blank"><img src="https://img.shields.io/npm/v/@labs-elyraa/baileys?color=2ecc71&label=npm&style=for-the-badge" alt="npm version"/></a>
+<a href="https://www.npmjs.com/package/@labs-elyraa/baileys" target="_blank"><img src="https://img.shields.io/npm/dt/@labs-elyraa/baileys?color=3498db&style=for-the-badge" alt="npm downloads"/></a>
 <a href="https://github.com/Lynxcode-id/Elyra-Labs-baileys/stargazers" target="_blank"><img src="https://img.shields.io/github/stars/Lynxcode-id/Elyra-Labs-baileys?color=f1c40f&style=for-the-badge" alt="GitHub stars"/></a>
 <a href="https://github.com/Lynxcode-id/Elyra-Labs-baileys/issues" target="_blank"><img src="https://img.shields.io/github/issues/Lynxcode-id/Elyra-Labs-baileys?color=e74c3c&style=for-the-badge" alt="GitHub issues"/></a>
 </p>
@@ -45,7 +45,7 @@
 <br/>
 
 - [🆕 What's New](#-whats-new)
-- [🍃 Why @elyra-labs/baileys](#-why-vanzxybaileys)
+- [🍃 Why @labs-elyraa/baileys](#-why-vanzxybaileys)
 - [🆚 Comparison](#-comparison)
 - [🧰 Built With](#-built-with)
 - [🔥 Features](#-features)
@@ -91,6 +91,30 @@
 
 ## 🆕 What's New
 
+### v1.1.0 — sync dengan `@itsliaaa/baileys` (0.4.3+)
+
+**SQLite auth state (`useSqliteAuthState`)**
+- Driver sekarang dipilih otomatis: **`bun:sqlite`** (di Bun) → **`node:sqlite`** (Node >= 22.13) → **`better-sqlite3`**. `better-sqlite3` tidak lagi wajib kalau runtime kamu sudah punya driver bawaan.
+- Semua operasi memakai *prepared statement* sinkron; penulisan key dibungkus transaksi `BEGIN IMMEDIATE` dengan rollback otomatis kalau gagal.
+- Schema baru: tabel `creds` dan `signal_keys` dibuat `WITHOUT ROWID`, plus `PRAGMA busy_timeout = 5000`, `journal_mode = WAL`, `synchronous = NORMAL`. Index `signal_keys_type_idx` dihapus (primary key `(type, id)` sudah cukup). **Database lama tetap kompatibel** — `CREATE TABLE IF NOT EXISTS` tidak mengubah tabel yang sudah ada.
+- `saveCreds()` melewati penulisan kalau creds tidak berubah sejak simpanan terakhir.
+- Signature fleksibel: `useSqliteAuthState('./auth.db')`, `useSqliteAuthState('./auth.db', existingDb)` (gaya itsliaaa), `useSqliteAuthState({ dbPath })`, `useSqliteAuthState({ database: existingDbOrPath })` (gaya Elyra).
+- `keys.list(type)` / `keys.listIds(type)` tetap ada untuk `migrateAuthState()`, dan **bug lama diperbaiki**: keduanya sebelumnya query tabel `keys` yang tidak ada (seharusnya `signal_keys`).
+- ⚠️ **Perubahan perilaku:** prune otomatis `pre-key` / `session` (simpan 500 baris terbaru tiap 30 menit) dihapus karena bisa menghapus sesi Signal yang masih dipakai. Checkpoint WAL pasif tetap jalan (`walCheckpointIntervalMs`, default 30 menit, `0` = mati).
+
+**WAProto**
+- Schema protobuf disinkronkan: **23 message baru** (mis. `Message.RequestLocationMessage`, `Message.RequestLocationUpdateMessage`, `Message.MusicMessage.Lyrics`, `MsgOpaqueData.MusicData`, `OmittedConversationMetadata`, `BotInterjectionMetadata`, `SyncActionValue.GroupHistoryToggleAction`, dll), **62 field baru** di 34 message yang sudah ada (`Message.instantImageMessage`, `ContextInfo.partnerDeepLinkToken`, `Message.VideoMessage.smartThumbnailTs`, `HistorySync.omittedConversationMetadata`, field CTWA promo di `ExternalAdReplyInfo`, dll), **10 enum baru**, dan 95 nilai enum baru di 20 enum yang sudah ada (`WebMessageInfo.StubType`, `BotCapabilityMetadata.BotCapabilityType`, `MutationProps`, ...).
+- Hanya **penambahan** — semua message/field khusus Elyra (`ConsumerApplication`, dll) tetap utuh. Verifikasi: 58 uji round-trip encode/decode silang antara codec itsliaaa dan Elyra, 0 gagal.
+- `Message.ChatSolidColorWallpaper` **sengaja tidak diubah** untuk field #1/#2: Elyra memakai `string colorLight/colorDark`, sedangkan WhatsApp terbaru memakai `fixed32 backgroundLightArgb/backgroundDarkArgb` pada nomor field yang sama (tipe wire berbeda, tidak bisa hidup berdampingan). Hanya `doodleLightArgb` (#4) dan `doodleDarkArgb` (#5) yang ditambahkan.
+- `WAProto/index.d.ts` ikut diperbarui (class, enum, dan nilai enum baru).
+
+**Socket & media**
+- Versi WA Web default naik ke `2.3000.1052238679`.
+- Upload media newsletter untuk `video` / `gif` / `ptv` kini menambahkan `server_transcode=1` (selain `server_thumb_gen=1`).
+- `MEDIA_PATH_MAP`, `NEWSLETTER_MEDIA_PATH_MAP`, dan `MEDIA_HKDF_KEY_MAPPING` diperluas dengan tipe media baru (`gif`, `ptt`, `ptv`, `ppic`, `ads-image`, `ads-video`, `group-history`, `music-artwork`, `maiba-file`, `waffle-image/video`, `sticker-pack`, ...). Entri yang sudah ada di Elyra **tidak ditimpa**.
+
+---
+
 ### v2.0.5
 **Packaging & types**
 - TypeScript declarations are now shipped for the whole package: `lib/index.d.ts`, a `.d.ts` next to every `lib/**/*.js`, and `WAProto/index.d.ts` (also exposed through the `./WAProto` export). They are generated from the sources, so many signatures are loose (`any`), and `proto` message types accept arbitrary keys.
@@ -101,7 +125,7 @@
 
 **Behaviour**
 - `AIRich` no longer attaches the placeholder `botMetadata.verificationMetadata` by default (it is random bytes, not a real Meta signature). Opt in with `setVerificationMetadata(true)`. The same applies to `wrapToBotForwardedMessage(msg, { verification: true })`.
-- Removed the `lib/Utils/MessageBuilder.js` compatibility shim. Import builders from `@elyra-labs/baileys` (they live in `lib/Builders/`); deep imports of `@elyra-labs/baileys/lib/Utils/MessageBuilder.js` no longer work.
+- Removed the `lib/Utils/MessageBuilder.js` compatibility shim. Import builders from `@labs-elyraa/baileys` (they live in `lib/Builders/`); deep imports of `@labs-elyraa/baileys/lib/Utils/MessageBuilder.js` no longer work.
 - The AI bot JID used by `AIRich` and the rich-message helpers is now a single constant, `DEFAULT_AI_BOT_JID` (override with the `VANZXY_AI_BOT_JID` environment variable, or per message with `setForwardBotJid()`).
 
 **Docs**
@@ -122,7 +146,7 @@
 **Vanzxy**
 
 - Upstream fork base: [github.com/vanzxysenpai](https://github.com/vanzxysenpai)
-- Package: [`@elyra-labs/baileys`](https://www.npmjs.com/package/@elyra-labs/baileys)
+- Package: [`@labs-elyraa/baileys`](https://www.npmjs.com/package/@labs-elyraa/baileys)
 - ✦ Maintains this fork solo — issues & PRs are welcome and reviewed personally.
 
 </td>
@@ -131,7 +155,7 @@
 
 ---
 
-## 🍃 Why @elyra-labs/baileys?
+## 🍃 Why @labs-elyraa/baileys?
 
 This fork focuses on:
 
@@ -150,9 +174,9 @@ This fork focuses on:
 
 ## 🆚 Comparison
 
-How `@elyra-labs/baileys` stacks up against its own lineage and the wider Baileys fork ecosystem:
+How `@labs-elyraa/baileys` stacks up against its own lineage and the wider Baileys fork ecosystem:
 
-| Capability | `@elyra-labs/baileys` | `@itsliaaa/baileys` | `WhiskeySockets/Baileys` |
+| Capability | `@labs-elyraa/baileys` | `@itsliaaa/baileys` | `WhiskeySockets/Baileys` |
 |---|:---:|:---:|:---:|
 | Native Flow buttons (V1/V2/V3) | ✅ | ✅ | ⚠️ basic only |
 | Carousel messages | ✅ | ❌ | ❌ |
@@ -355,7 +379,7 @@ Useful for filtering:
 ## 📦 Installation
 
 ```bash
-npm install @elyra-labs/baileys
+npm install @labs-elyraa/baileys
 ```
 
 Directly from GitHub:
@@ -378,7 +402,7 @@ Everything below is **optional** — the socket works without any of them. Insta
 | `fluent-ffmpeg` | Audio/video conversion for media messages |
 | `audio-decode` | Audio waveform/duration extraction (voice notes, VoIP capture) |
 | `link-preview-js` | Rich link previews for URLs in outgoing text messages |
-| `better-sqlite3` | SQLite auth state, SQLite store adapter, **and** the [Bot Framework](#-bot-framework)'s `SQLiteStore`/`StatsManager` |
+| `better-sqlite3` | SQLite store adapter and the [Bot Framework](#-bot-framework)'s `SQLiteStore`/`StatsManager`. For `useSqliteAuthState` it is only needed when your runtime has no built-in driver (Bun's `bun:sqlite` and Node >= 22.13's `node:sqlite` are used automatically). |
 | `node-webpmux` | Packname/author EXIF metadata on stickers made via `MediaManager.convertToSticker()` — not needed for plain sticker conversion |
 | `mongodb` | MongoDB store adapter |
 | `mysql2` | MySQL store adapter |
@@ -391,7 +415,7 @@ Everything below is **optional** — the socket works without any of them. Insta
 ## 🚀 Quick Start
 
 ```js
-import { makeWASocket, useMultiFileAuthState } from '@elyra-labs/baileys'
+import { makeWASocket, useMultiFileAuthState } from '@labs-elyraa/baileys'
 
 const { state, saveCreds } = await useMultiFileAuthState('auth_info')
 
@@ -431,11 +455,11 @@ Four auth-state backends ship out of the box. All return the same `{ state, save
 |---|---|---|
 | `useMultiFileAuthState(folder)` | One JSON file per key, on disk | Default choice — simple, debuggable, works everywhere |
 | `useSingleFileAuthState(fileName)` | One JSON file, on disk | Small bots where a single file is easier to manage/back up |
-| `useSqliteAuthState(opts)` | SQLite (`better-sqlite3`) | Bots that already use SQLite, or want auth in one embedded DB file |
+| `useSqliteAuthState(pathOrOpts)` | SQLite (`bun:sqlite` / `node:sqlite` / `better-sqlite3`, auto-detected) | Bots that already use SQLite, or want auth in one embedded DB file |
 | `useCacheManagerAuthState(store, sessionKey)` | Any [`cacheable`](https://www.npmjs.com/package/@cacheable/node-cache)-compatible store | Multi-session hosting panels, Redis-backed setups |
 
 ```js
-import { makeWASocket, useMultiFileAuthState } from '@elyra-labs/baileys'
+import { makeWASocket, useMultiFileAuthState } from '@labs-elyraa/baileys'
 
 const { state, saveCreds } = await useMultiFileAuthState('auth_info')
 const sock = makeWASocket({ auth: state })
@@ -443,13 +467,30 @@ sock.ev.on('creds.update', saveCreds)
 ```
 
 ```js
-// SQLite variant
-import { makeWASocket, useSqliteAuthState } from '@elyra-labs/baileys'
+// SQLite variant — the driver is auto-detected (bun:sqlite -> node:sqlite -> better-sqlite3)
+import { makeWASocket, useSqliteAuthState } from '@labs-elyraa/baileys'
 
-const { state, saveCreds } = await useSqliteAuthState({ database: './auth.db' })
+const { state, saveCreds, close } = await useSqliteAuthState('./auth.db')
 const sock = makeWASocket({ auth: state })
 sock.ev.on('creds.update', saveCreds)
 ```
+
+All accepted call styles:
+
+```js
+await useSqliteAuthState('./auth.db')                        // path
+await useSqliteAuthState('./auth.db', existingDb)            // reuse your own connection (not closed by close())
+await useSqliteAuthState({ dbPath: './auth.db' })            // options object
+await useSqliteAuthState({ database: './auth.db' })          // `database` may be a path...
+await useSqliteAuthState({ database: existingDb })           // ...or an open connection
+await useSqliteAuthState({ dbPath: './auth.db', walCheckpointIntervalMs: 0 }) // disable the passive WAL checkpoint timer
+```
+
+Notes:
+- On Node < 22.13 without Bun, install a driver: `npm i better-sqlite3`.
+- `saveCreds()` and `keys.get/set` are synchronous; `await` them freely, both styles work.
+- Call `close()` on shutdown to flush and release the file (it only closes connections it opened itself).
+- To move an existing file/Redis session into SQLite, use `migrateAuthState({ from, to })`.
 
 `useMultiFileAuthState` also exports `pruneStaleAuthFiles(folder, options)` to clean up old sender-key files on a schedule — useful for long-running bots that accumulate thousands of stale key files.
 
@@ -468,7 +509,7 @@ sock.ev.on('creds.update', saveCreds)
 | Redis | `createRedisStoreAdapter(opts)` |
 
 ```js
-import { makeWASocket, makeInMemoryStore } from '@elyra-labs/baileys'
+import { makeWASocket, makeInMemoryStore } from '@labs-elyraa/baileys'
 
 const store = makeInMemoryStore({})
 store.readFromFile('./baileys_store.json')
@@ -485,12 +526,12 @@ store.bind(sock.ev)
 ### Buttons & Native Flow
 
 ```js
-import { Button } from '@elyra-labs/baileys'
+import { Button } from '@labs-elyraa/baileys'
 
 await new Button(sock)
     .setTitle('Promo Spesial')
     .setBody('Diskon 20% cuma hari ini')
-    .setFooter('@elyra-labs/baileys')
+    .setFooter('@labs-elyraa/baileys')
     .addReply('Klaim Sekarang', 'claim_promo')
     .addUrl('Lihat Katalog', 'https://example.com/catalog')
     .addCall('Hubungi Kami', '628123456789')
@@ -500,7 +541,7 @@ await new Button(sock)
 ### Poll
 
 ```js
-import { Poll } from '@elyra-labs/baileys'
+import { Poll } from '@labs-elyraa/baileys'
 
 await new Poll(sock)
     .setName('Mau makan apa hari ini?')
@@ -514,7 +555,7 @@ await new Poll(sock)
 > Each card must be built with `Button(...).toCard()` first — a carousel card is really just a button card with an image/video header.
 
 ```js
-import { Button, Carousel } from '@elyra-labs/baileys'
+import { Button, Carousel } from '@labs-elyraa/baileys'
 
 const cardA = await new Button(sock)
     .setImage('https://example.com/a.jpg')
@@ -537,7 +578,7 @@ await new Carousel(sock)
 ### AIRich — rich response cards
 
 ```js
-import { AIRich } from '@elyra-labs/baileys'
+import { AIRich } from '@labs-elyraa/baileys'
 
 await new AIRich(sock)
     .addHeading('Ringkasan Order')
@@ -557,7 +598,7 @@ Other builders worth knowing about: **`ButtonV2`** (simpler quick-reply-only but
 
 ### 📁 Builders Folder Map (`lib/Builders/`)
 
-Every message builder lives in its own file under `lib/Builders/`, so you can trace exactly where a class comes from instead of digging through one giant `MessageBuilder.js`. `index.js` is just the barrel file that re-exports everything below (plus their aliases) for the top-level `import { ... } from '@elyra-labs/baileys'` syntax.
+Every message builder lives in its own file under `lib/Builders/`, so you can trace exactly where a class comes from instead of digging through one giant `MessageBuilder.js`. `index.js` is just the barrel file that re-exports everything below (plus their aliases) for the top-level `import { ... } from '@labs-elyraa/baileys'` syntax.
 
 | File | Exports | What it's for |
 |---|---|---|
@@ -570,12 +611,12 @@ Every message builder lives in its own file under `lib/Builders/`, so you can tr
 | `AIRich.js` | `AIRich` (+ aliases `ORich`, `AIVanzxy`, `LeafRich`, `VanzxyAI`, `VanzxyRich`, `RichVanzxy`) | The rich AI-assistant-style response builder described above — headings, formatted text, tables, media/product/post cards, task/progress cards, tip banners, quick-reply suggestions. |
 | `A2UI.js` | `A2UI`, `sendA2UIWidget` | Lower-level A2UI/Bloks widget builder. Builds the flat `components` tree (Column/Row → `children`, Card/Button → `child`, Modal → `trigger`/`content`) that Bloks widgets expect and sends it through the same `getBizBinaryNode()` path as `Button`/`ButtonV2`, so the wire-level node always matches the button names actually sent. |
 | `VanzxyBaileys.js` | `VanzxyBaileys` | A unified builder **hub** — one object that wraps all the builders above behind short method names (`.button()`, `.buttonV2()`, `.buttonV3()`, `.carousel()`, `.poll()`, `.airich()`, `.a2ui()`), plus PascalCase aliases (`.Button()`, `.Carousel()`, `.Poll()`, `.AIRich()`, `.A2UI()`) for developers who prefer that naming style. Nothing new is implemented here — it's purely a single entry point over the individual classes. |
-| `index.js` | everything above, plus `MESSAGE_BUILDER_VERSION` | The barrel file — re-exports every builder and its aliases so `import { Button, Poll, AIRich, VanzxyBaileys } from '@elyra-labs/baileys'` works without reaching into individual files. `MESSAGE_BUILDER_VERSION` tracks the builder API surface's own version, independent of the package version. |
+| `index.js` | everything above, plus `MESSAGE_BUILDER_VERSION` | The barrel file — re-exports every builder and its aliases so `import { Button, Poll, AIRich, VanzxyBaileys } from '@labs-elyraa/baileys'` works without reaching into individual files. `MESSAGE_BUILDER_VERSION` tracks the builder API surface's own version, independent of the package version. |
 
 **Unified hub example** — useful if you'd rather carry one object around than import each builder individually:
 
 ```js
-import { VanzxyBaileys } from '@elyra-labs/baileys'
+import { VanzxyBaileys } from '@labs-elyraa/baileys'
 
 const vx = new VanzxyBaileys(sock)
 
@@ -597,7 +638,7 @@ await vx.poll()
 Experimental audio-call support (ported from ourin-baileys) via a WASM call stack + WebRTC relay. Requires the optional `@roamhq/wrtc` peer dependency.
 
 ```js
-import { VoipClient } from '@elyra-labs/baileys'
+import { VoipClient } from '@labs-elyraa/baileys'
 
 const voip = new VoipClient({ resourcesPath: './voip-resources' })
 await voip.connectWithSocket(sock)
@@ -618,7 +659,7 @@ call.on('ended', (reason) => console.log('Call ended:', reason))
 `WAUSync` (`USyncQuery` / `USyncUser` + protocols) lets you check things like WhatsApp registration, device lists, status, and username info for a JID before you message it — the same mechanism behind `sock.onWhatsApp()`.
 
 ```js
-import { USyncQuery, USyncUser, USyncContactProtocol } from '@elyra-labs/baileys'
+import { USyncQuery, USyncUser, USyncContactProtocol } from '@labs-elyraa/baileys'
 
 const query = new USyncQuery()
     .withContext('interactive')
@@ -690,7 +731,7 @@ An optional, higher-level layer on top of the raw socket: middleware routing, a 
 Needs the `better-sqlite3` peer dependency (session + stats storage) and `fluent-ffmpeg` (sticker/voice-note conversion, already listed above) — both fail with an install hint rather than crashing if you use a Framework feature that needs them without installing them first.
 
 ```js
-import { Bot } from '@elyra-labs/baileys'
+import { Bot } from '@labs-elyraa/baileys'
 
 const bot = new Bot({
     socketConfig: { printQRInTerminal: true },
@@ -776,7 +817,7 @@ Every module above ships a matching `.d.ts`, so your editor will show full hover
 ### Stability & security quick start
 
 ```js
-import makeWASocket, { autoReconnect, useEncryptedFileAuthState, sendHumanized } from '@elyra-labs/baileys'
+import makeWASocket, { autoReconnect, useEncryptedFileAuthState, sendHumanized } from '@labs-elyraa/baileys'
 
 // creds + keys encrypted on disk (legacy plaintext folders are read and migrated on next save)
 const { state, saveCreds } = await useEncryptedFileAuthState('./auth', { password: process.env.AUTH_PASSWORD })
@@ -796,7 +837,7 @@ await manager.start()
 Test bot logic offline with `createMockSocket()`:
 
 ```js
-import { createMockSocket } from '@elyra-labs/baileys'
+import { createMockSocket } from '@labs-elyraa/baileys'
 
 const mock = createMockSocket()
 myBotSetup(mock.sock)                              // your real bot code, unchanged
@@ -818,16 +859,17 @@ const out = await mock.waitForReply()
 
 ## 📘 TypeScript Support
 
-Every file in `lib/` ships a matching `.d.ts`, including all `Types/*` definitions (Auth, Chat, Contact, Events, GroupMetadata, Message, Product, Signal, USync, and more). No `@types/` package needed — plain `import { ... } from '@elyra-labs/baileys'` gets full autocomplete in TS or JS-with-checkJS projects.
+Every file in `lib/` ships a matching `.d.ts`, including all `Types/*` definitions (Auth, Chat, Contact, Events, GroupMetadata, Message, Product, Signal, USync, and more). No `@types/` package needed — plain `import { ... } from '@labs-elyraa/baileys'` gets full autocomplete in TS or JS-with-checkJS projects.
 
 ---
 
 ## 📚 Fork Lineage
 
 ```
-@elyra-labs/baileys
-└── @itsliaaa/baileys
-    └── WhiskeySockets/Baileys
+@labs-elyraa/baileys
+└── @vanzxy/baileys
+    └── @itsliaaa/baileys
+        └── WhiskeySockets/Baileys
 ```
 
 Respect to all original maintainers and contributors.
@@ -899,7 +941,9 @@ Untuk laporan bug, sertakan versi Node.js, cara reproduksi, dan potongan log `la
 - **JAPofc** (`@japofc/baileys`) — auto-reconnect manager, encrypted auth state / security pack, humanized sender, offline mock socket, Meta AI helper
 - **nexustechpro2** (`@nexustechpro/baileys`) — extra USync protocols (Business, Picture, TextStatus, Sidelist, Feature)
 - **lpzeravk / systemzero** — reconnect backoff, Bad MAC handler, connection watchdog
-- **WhiskeySockets/Baileys** & **@itsliaaa/baileys** — upstream base
+- **Lia Wynn (itsliaaa)** (`@itsliaaa/baileys`) — primary upstream of this fork line; v1.1.0 syncs her multi-driver SQLite auth state (`bun:sqlite` / `node:sqlite` / `better-sqlite3`), refreshed WAProto schema, WA Web version bump, newsletter `server_transcode` upload fix, and expanded media path / HKDF mappings
+- **Vanzxy** (`@vanzxy/baileys`) — direct fork base: Builders, Framework, VoIP, and most utility modules
+- **WhiskeySockets/Baileys** — original library
 
 Full details and license terms per component: see [`NOTICE.md`](./NOTICE.md).
 
@@ -922,7 +966,7 @@ Use responsibly and follow WhatsApp Terms of Service.
 The published package is intentionally limited to the runtime library, generated WhatsApp protocol bindings, installation/runtime helpers, legal files, and documentation. The `files` field in `package.json` controls what is included in the published package.
 
 ```text
-@elyra-labs/baileys/
+@labs-elyraa/baileys/
 ├── lib/                     # Main runtime implementation and TypeScript declarations
 │   ├── Builders/            # Message and interactive builders
 │   ├── Defaults/            # Default configuration and constants
@@ -975,7 +1019,7 @@ This means documentation changes do not modify the runtime implementation. Editi
 
 ## 🏗️ Architecture Overview
 
-`@elyra-labs/baileys` is organized in layers. Keeping these layers separate makes it easier to extend a builder or protocol surface without unnecessarily changing the transport layer.
+`@labs-elyraa/baileys` is organized in layers. Keeping these layers separate makes it easier to extend a builder or protocol surface without unnecessarily changing the transport layer.
 
 ### Runtime flow
 
@@ -1060,16 +1104,16 @@ The package also defines these export paths in `package.json`:
 
 | Export | Purpose |
 |---|---|
-| `@elyra-labs/baileys` | Main public API and socket factory |
-| `@elyra-labs/baileys/WAProto` | Generated protocol API |
-| `@elyra-labs/baileys/WAProto/*` | Individual generated protocol modules |
-| `@elyra-labs/baileys/lib/*` | Published library modules with declarations |
-| `@elyra-labs/baileys/package.json` | Package metadata |
+| `@labs-elyraa/baileys` | Main public API and socket factory |
+| `@labs-elyraa/baileys/WAProto` | Generated protocol API |
+| `@labs-elyraa/baileys/WAProto/*` | Individual generated protocol modules |
+| `@labs-elyraa/baileys/lib/*` | Published library modules with declarations |
+| `@labs-elyraa/baileys/package.json` | Package metadata |
 
 For normal application development, the root import is the safest starting point:
 
 ```js
-import makeWASocket, { AIRich, DisconnectReason } from '@elyra-labs/baileys'
+import makeWASocket, { AIRich, DisconnectReason } from '@labs-elyraa/baileys'
 ```
 
 If a specialized module is required, use an export path explicitly documented by the package rather than importing a source file that is not part of the export map.
@@ -1104,7 +1148,7 @@ The following matrix describes the documented surface of this fork without treat
 
 ## 🔄 Migration Notes
 
-When moving an application to `@elyra-labs/baileys`, check the following areas first:
+When moving an application to `@labs-elyraa/baileys`, check the following areas first:
 
 1. **Runtime:** use Node.js `>=20.0.0`.
 2. **Module system:** the package is ESM-only (`"type": "module"`). Use `import`/`export` rather than CommonJS `require()` for package modules.
@@ -1119,16 +1163,16 @@ When moving an application to `@elyra-labs/baileys`, check the following areas f
 
 ```js
 // ❌ CommonJS in an ESM-only application
-const baileys = require('@elyra-labs/baileys')
+const baileys = require('@labs-elyraa/baileys')
 
 // ✅ ESM
-import makeWASocket from '@elyra-labs/baileys'
+import makeWASocket from '@labs-elyraa/baileys'
 ```
 
 For dynamic loading, use `import()`:
 
 ```js
-const module = await import('@elyra-labs/baileys')
+const module = await import('@labs-elyraa/baileys')
 ```
 
 ---
@@ -1158,7 +1202,7 @@ For example, an `AIRich` change should first prove that the builder produces the
 ### What a useful bug report contains
 
 ```text
-Package version: @elyra-labs/baileys x.y.z
+Package version: @labs-elyraa/baileys x.y.z
 Node.js version: v20+ / exact version
 Environment: Linux / Pterodactyl / Termux / VPS / other
 Feature: AIRich / A2UI / media / socket / auth / etc.
@@ -1291,7 +1335,7 @@ import makeWASocket, {
     useMultiFileAuthState,
     fetchLatestBaileysVersion,
     Browsers
-} from '@elyra-labs/baileys'
+} from '@labs-elyraa/baileys'
 
 const { state, saveCreds } = await useMultiFileAuthState('auth_info')
 const { version } = await fetchLatestBaileysVersion()
@@ -1342,7 +1386,7 @@ Notes:
 ### Recipe 2 — Reading incoming messages safely
 
 ```js
-import { normalizeMessageContent, getContentType, jidNormalizedUser, isLidUser, resolveSenderPn } from '@elyra-labs/baileys'
+import { normalizeMessageContent, getContentType, jidNormalizedUser, isLidUser, resolveSenderPn } from '@labs-elyraa/baileys'
 
 function extractText(content) {
     return content?.conversation
@@ -1401,12 +1445,12 @@ If you would rather not hand-roll this, the optional [Bot Framework](#-bot-frame
 ### Recipe 4 — Interactive messages: send, then handle the reply
 
 ```js
-import { Button } from '@elyra-labs/baileys'
+import { Button } from '@labs-elyraa/baileys'
 
 await new Button(sock)
     .setTitle('Konfirmasi')
     .setBody('Lanjutkan pesanan?')
-    .setFooter('@elyra-labs/baileys')
+    .setFooter('@labs-elyraa/baileys')
     .addReply('Ya', 'order_yes')
     .addReply('Tidak', 'order_no')
     .send(jid)
@@ -1469,7 +1513,7 @@ Use **either** the array-of-JIDs path **or** `Dugong.sendStatusWhatsApp(content,
 ### Recipe 7 — Long texts, human-like sending, voice notes
 
 ```js
-import { sendLongText, sendHumanized, splitText, whatsappify } from '@elyra-labs/baileys'
+import { sendLongText, sendHumanized, splitText, whatsappify } from '@labs-elyraa/baileys'
 
 // chunk long replies and optionally convert markdown to WhatsApp formatting
 const res = await sendLongText(sock, jid, longString, { quoted: m, format: true, delayMs: 400 })
@@ -1487,7 +1531,7 @@ whatsappify('**bold** and *italic*')
 ### Recipe 8 — Download, inspect and re-upload media
 
 ```js
-import { downloadMediaMessage, getContentType, normalizeMessageContent } from '@elyra-labs/baileys'
+import { downloadMediaMessage, getContentType, normalizeMessageContent } from '@labs-elyraa/baileys'
 
 const content = normalizeMessageContent(m.message)
 const kind = getContentType(content)       // 'imageMessage' | 'videoMessage' | 'audioMessage' | 'documentMessage' | 'stickerMessage' | …
@@ -1521,7 +1565,7 @@ The utility modules `anti-delete`, `message-search` and `auto-reply` are shipped
 ### Recipe 10 — Offline tests with the mock socket
 
 ```js
-import { createMockSocket } from '@elyra-labs/baileys'
+import { createMockSocket } from '@labs-elyraa/baileys'
 
 const mock = createMockSocket()
 myBotSetup(mock.sock)                              // your real bot code, unchanged
@@ -1534,7 +1578,7 @@ This keeps CI independent of a WhatsApp account. The mock does not exercise Sign
 ### Recipe 11 — Fetching external URLs with a timeout
 
 ```js
-import { fetchWithTimeout, DEFAULT_FETCH_TIMEOUT_MS } from '@elyra-labs/baileys'
+import { fetchWithTimeout, DEFAULT_FETCH_TIMEOUT_MS } from '@labs-elyraa/baileys'
 
 const res = await fetchWithTimeout('https://example.com/api', { method: 'GET' }, 8000)
 ```
@@ -1562,7 +1606,7 @@ Helper functions (module `disconnect-reason`): `mapDisconnectReason()`, `isFatal
 ### Hosting notes (VPS, containers and game-panel hosts)
 
 - **One process per auth store.** Two processes writing the same folder or database is the usual cause of `Bad MAC`. When a panel restarts your server, make sure the old process has actually exited before the new one starts.
-- **Node.js ≥ 20, ESM only.** Older versions are rejected via the `engines` field. In a CommonJS project use `await import('@elyra-labs/baileys')`.
+- **Node.js ≥ 20, ESM only.** Older versions are rejected via the `engines` field. In a CommonJS project use `await import('@labs-elyraa/baileys')`.
 - **Persistent storage.** Keep `auth_info/` (or your SQLite file) on a volume that survives redeploys; losing it forces a re-pair. Keep it out of git and out of public backups.
 - **ffmpeg.** Set `FFMPEG_PATH`, install `ffmpeg-static`, or put `ffmpeg` on `PATH`; the resolver in module `ffmpeg-path` (`setFfmpegPath()`, `resolveFfmpegPath()`, `requireFfmpegPath()`) checks those in that spirit. Panels frequently ship without ffmpeg.
 - **Optional native modules.** `sharp`, `better-sqlite3` and `@roamhq/wrtc` ship native bindings; on locked-down hosts prefer the pure-JS fallbacks (`jimp`) and the file-based auth state unless you can install build tools.
@@ -1612,7 +1656,7 @@ These parts are shipped, but the changelogs state that they were verified static
 
 ### Where to report problems
 
-Open an issue at [`github.com/Lynxcode-id/Elyra-Labs-baileys/issues`](https://github.com/Lynxcode-id/Elyra-Labs-baileys/issues) with your Node.js version, a minimal reproduction, and the `lastDisconnect.error` log when the problem is connection-related. For release-to-release differences, read the `CHANGELOG-*.md` files shipped inside the package and the version history on [npm](https://www.npmjs.com/package/@elyra-labs/baileys).
+Open an issue at [`github.com/Lynxcode-id/Elyra-Labs-baileys/issues`](https://github.com/Lynxcode-id/Elyra-Labs-baileys/issues) with your Node.js version, a minimal reproduction, and the `lastDisconnect.error` log when the problem is connection-related. For release-to-release differences, read the `CHANGELOG-*.md` files shipped inside the package and the version history on [npm](https://www.npmjs.com/package/@labs-elyraa/baileys).
 
 ---
 
@@ -5882,7 +5926,7 @@ This section collects practical patterns for working with the public surfaces do
 import makeWASocket, {
   useMultiFileAuthState,
   DisconnectReason
-} from '@elyra-labs/baileys'
+} from '@labs-elyraa/baileys'
 
 const { state, saveCreds } = await useMultiFileAuthState('./auth')
 
@@ -5909,7 +5953,7 @@ Keep the authentication state persistent and always attach the credential update
 
 ```js
 await sock.sendMessage(jid, {
-  text: 'Hello from @elyra-labs/baileys'
+  text: 'Hello from @labs-elyraa/baileys'
 })
 ```
 
@@ -5922,7 +5966,7 @@ For builder-based features, keep the construction chain separate from the final 
 ```js
 const rich = new AIRich(sock)
   .setTitle('Vanzxy AI')
-  .setFooter('Powered by @elyra-labs/baileys')
+  .setFooter('Powered by @labs-elyraa/baileys')
 
 await rich.send(jid)
 ```
@@ -5992,13 +6036,13 @@ The exact field names must come from the generated schema shipped with this pack
 The package exposes its main API through the package entrypoint. For debugging a particular release, inspect the local declaration files as the authoritative TypeScript surface:
 
 ```bash
-find node_modules/@elyra-labs/baileys -name '*.d.ts' | sort
+find node_modules/@labs-elyraa/baileys -name '*.d.ts' | sort
 ```
 
 For a specific declaration:
 
 ```bash
-sed -n '1,220p' node_modules/@elyra-labs/baileys/lib/Builders/index.d.ts
+sed -n '1,220p' node_modules/@labs-elyraa/baileys/lib/Builders/index.d.ts
 ```
 
 This is preferable to relying on an older README or an upstream package whose export surface may differ.
@@ -6166,7 +6210,7 @@ Inspect the target JID form and the participant identity selected by the message
 
 # 🔄 Upgrade Discipline
 
-When upgrading `@elyra-labs/baileys`, use this order:
+When upgrading `@labs-elyraa/baileys`, use this order:
 
 ```text
 1. Back up auth state

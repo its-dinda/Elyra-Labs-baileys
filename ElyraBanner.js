@@ -22,7 +22,7 @@ export function printBanner() {
     const fancy = (Boolean(process.stdout.isTTY) || process.env.FORCE_COLOR !== undefined) && process.env.NO_COLOR === undefined;
 
     if (!fancy) {
-        console.log(`\n🍃 @elyra-labs/baileys${version ? ` v${version}` : ''} — 桜 ようこそ (welcome)`);
+        console.log(`\n🍃 @labs-elyraa/baileys${version ? ` v${version}` : ''} — 桜 ようこそ (welcome)`);
         console.log(`   Node ${nodeVersion} · Docs ${DOCS}`);
         console.log('   Made with 🍃 by Vanzxy — thanks for using!\n');
         return;
@@ -89,7 +89,7 @@ export function printBanner() {
     const divider = row(center(`${c.gray}${'╌'.repeat(10)}${c.reset} ${c.deep}❀${c.reset} ${c.gray}${'╌'.repeat(10)}${c.reset}`));
 
     const kanji = `${c.red}●${c.reset}  ${c.bold}${c.petal}桜${c.reset}  ${c.dim}·${c.reset}  ${c.bold}${c.petal}ようこそ${c.reset}  ${c.red}●${c.reset}`;
-    const title = `${c.bold}${gradient('🍃 @elyra-labs/baileys')}${version ? `  ${c.dim}${c.pink}v${version}${c.reset}` : ''}`;
+    const title = `${c.bold}${gradient('🍃 @labs-elyraa/baileys')}${version ? `  ${c.dim}${c.pink}v${version}${c.reset}` : ''}`;
     const tagline = `${c.mint}Next-gen Baileys fork by Vanzxy${c.reset}`;
     const sub = `${c.dim}Interactive messages ${c.pink}·${c.reset}${c.dim} native flow ${c.pink}·${c.reset}${c.dim} status tools${c.reset}`;
     const quote = `${c.italic}${c.dim}「 小さな桜、大きな夢 」${c.reset}`;
